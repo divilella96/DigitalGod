@@ -1,2 +1,0 @@
-# DigitalGod
-Arvore Fractal

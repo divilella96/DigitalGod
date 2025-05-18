@@ -2,66 +2,62 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Fractal Ilustrativo</title>
+  <title>Fractal de Árvore Funcional</title>
   <style>
     body {
+      background: #000;
+      color: white;
+      text-align: center;
       margin: 0;
-      background-color: #000;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      padding: 20px;
       font-family: sans-serif;
     }
     canvas {
-      background-color: #111;
-      margin-top: 20px;
-      border: 1px solid #444;
-    }
-    label, input {
-      margin: 10px;
+      display: block;
+      margin: 0 auto;
+      background: #111;
+      border: 1px solid #555;
     }
   </style>
 </head>
 <body>
   <h1>Fractal de Árvore</h1>
-  <label for="depth">Profundidade: </label>
-  <input type="range" id="depth" min="1" max="12" value="9">
-  <canvas id="fractalCanvas" width="600" height="600"></canvas>
+  <p>Use o controle para mudar a profundidade:</p>
+  <input id="depth" type="range" min="1" max="12" value="9">
+  <canvas id="canvas" width="600" height="600"></canvas>
 
   <script>
-    const canvas = document.getElementById('fractalCanvas');
+    const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const depthInput = document.getElementById('depth');
 
-    function drawTree(x1, y1, angle, depth) {
+    function drawBranch(x, y, angle, length, depth) {
       if (depth === 0) return;
 
-      const length = depth * 10;
-      const x2 = x1 + Math.cos(angle) * length;
-      const y2 = y1 + Math.sin(angle) * length;
+      const xEnd = x + Math.cos(angle) * length;
+      const yEnd = y + Math.sin(angle) * length;
 
       ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
+      ctx.moveTo(x, y);
+      ctx.lineTo(xEnd, yEnd);
       ctx.strokeStyle = `hsl(${depth * 30}, 100%, 70%)`;
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      drawTree(x2, y2, angle - Math.PI / 6, depth - 1);
-      drawTree(x2, y2, angle + Math.PI / 6, depth - 1);
+      drawBranch(xEnd, yEnd, angle - Math.PI / 6, length * 0.7, depth - 1);
+      drawBranch(xEnd, yEnd, angle + Math.PI / 6, length * 0.7, depth - 1);
     }
 
-    function drawFractal() {
+    function drawTree(depth) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.save();
-      ctx.translate(canvas.width / 2, canvas.height); // ponto de partida na base do canvas
-      drawTree(0, 0, -Math.PI / 2, parseInt(depthInput.value));
-      ctx.restore();
+      drawBranch(canvas.width / 2, canvas.height - 10, -Math.PI / 2, 100, depth);
     }
 
-    depthInput.addEventListener('input', drawFractal);
-    drawFractal(); // desenhar inicialmente
+    depthInput.addEventListener('input', () => {
+      drawTree(parseInt(depthInput.value));
+    });
+
+    drawTree(parseInt(depthInput.value));
   </script>
 </body>
 </html>

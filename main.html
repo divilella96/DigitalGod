@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Fractal Ilustrativo</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: sans-serif;
+    }
+    canvas {
+      background-color: #111;
+      margin-top: 20px;
+      border: 1px solid #444;
+    }
+    label, input {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fractal de Árvore</h1>
+  <label for="depth">Profundidade: </label>
+  <input type="range" id="depth" min="1" max="12" value="9">
+  <canvas id="fractalCanvas" width="600" height="600"></canvas>
+
+  <script>
+    const canvas = document.getElementById('fractalCanvas');
+    const ctx = canvas.getContext('2d');
+    const depthInput = document.getElementById('depth');
+
+    function drawTree(x1, y1, angle, depth) {
+      if (depth === 0) return;
+
+      const length = depth * 10;
+      const x2 = x1 + Math.cos(angle) * length;
+      const y2 = y1 + Math.sin(angle) * length;
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.strokeStyle = `hsl(${depth * 30}, 100%, 70%)`;
+      ctx.lineWidth = depth;
+      ctx.stroke();
+
+      drawTree(x2, y2, angle - Math.PI / 6, depth - 1);
+      drawTree(x2, y2, angle + Math.PI / 6, depth - 1);
+    }
+
+    function drawFractal() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const depth = parseInt(depthInput.value);
+      drawTree(canvas.width / 2, canvas.height, -Math.PI / 2, depth);
+    }
+
+    depthInput.addEventListener('input', drawFractal);
+    drawFractal();
+  </script>
+</body>
+</html>

@@ -45,7 +45,7 @@
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
       ctx.strokeStyle = `hsl(${depth * 30}, 100%, 70%)`;
-      ctx.lineWidth = depth;
+      ctx.lineWidth = 2;
       ctx.stroke();
 
       drawTree(x2, y2, angle - Math.PI / 6, depth - 1);
@@ -54,12 +54,14 @@
 
     function drawFractal() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const depth = parseInt(depthInput.value);
-      drawTree(canvas.width / 2, canvas.height, -Math.PI / 2, depth);
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height); // ponto de partida na base do canvas
+      drawTree(0, 0, -Math.PI / 2, parseInt(depthInput.value));
+      ctx.restore();
     }
 
     depthInput.addEventListener('input', drawFractal);
-    drawFractal();
+    drawFractal(); // desenhar inicialmente
   </script>
 </body>
 </html>
